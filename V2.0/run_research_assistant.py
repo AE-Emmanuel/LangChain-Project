@@ -1,5 +1,4 @@
-"""Demonstration script for the consolidated research assistant module."""
-
+#demonstration script for research assistant
 from __future__ import annotations
 
 import logging
@@ -22,8 +21,6 @@ INDEX_PATH = Path("indexes/faiss_index_all_mini.index")
 
 
 def ensure_index(dataset_dir: Path, index_path: Path) -> None:
-    """Create the FAISS index if it does not already exist."""
-
     meta_path = index_path.with_suffix(".meta.json")
     if index_path.exists() and meta_path.exists():
         logger.info("Re-using existing FAISS index at %s", index_path)
@@ -57,12 +54,12 @@ def ensure_index(dataset_dir: Path, index_path: Path) -> None:
 
 def log_interaction(agent: QAAgent, query: str) -> None:
     response = agent.answer(query)
-
+    print("\n" + "=" * 80)
     print(f"User: {query}\n")
     answer = response.get("answer", "").strip()
     print("Assistant:\n ", answer if answer else "<no answer>")
 
-    print("\nTop sources (up to 3):")
+    print("\nTop sources :")
     top_sources = response.get("top_sources", [])
     if not top_sources:
         print(" - n/a")
@@ -72,7 +69,7 @@ def log_interaction(agent: QAAgent, query: str) -> None:
             chunk = src.get("chunk_id")
             score = src.get("score")
             print(f" - {path} (chunk {chunk}) score={score:.4f}")
-    print("\n" + "-" * 80 + "\n")
+    print("\n" + "=" * 80)
 
 
 def main() -> None:
@@ -81,9 +78,9 @@ def main() -> None:
     agent = QAAgent(index_path=str(INDEX_PATH), top_k=6)
 
     interactions = [
-        "What are the main goals of software testing?",
-        "Given those goals, how does software testing help manage project risks?",
-        "Summarize the main idea of software engineering.",
+        "What is Agile development with respect to software testing?",
+        "Given that definition, what are the main advantages of Agile testing compared to traditional ones?",
+        "Summarize the main idea of software engineering and testing",
     ]
 
     for query in interactions:

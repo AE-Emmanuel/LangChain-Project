@@ -27,9 +27,7 @@ _REFERENCE_HEADINGS = {"references", "bibliography", "external links"}
 # Dataset helpers 
 # ---------------------------------------------------------------------------
 
-def load_raw_documents(dataset_dir: str) -> List[Dict]:
-    """Load every non-empty .txt document under ``dataset_dir``."""
-
+def load_raw_documents(dataset_dir: str) -> List[Dict]: #load dataset
     dataset_path = Path(dataset_dir)
     if not dataset_path.exists():
         raise FileNotFoundError(f"Dataset directory not found: {dataset_path}")
@@ -64,9 +62,7 @@ def load_raw_documents(dataset_dir: str) -> List[Dict]:
     return documents
 
 
-def _locate_chunk_span(text: str, chunk: str, cursor: int, window: int = 1000) -> Tuple[int, int]:
-    """Robustly locate the span (start, end) of `chunk` in `text`."""
-
+def _locate_chunk_span(text: str, chunk: str, cursor: int, window: int = 1000) -> Tuple[int, int]: #locate chunk in data
     if not chunk:
         return cursor, cursor
 
@@ -111,14 +107,12 @@ def _locate_chunk_span(text: str, chunk: str, cursor: int, window: int = 1000) -
     end = min(len(text), start + len(chunk))
     return start, end
 
-
+#split docs into chunks
 def split_documents(
     documents: List[Dict],
     chunk_size: int = 1100,
     chunk_overlap: int = 220,
 ) -> List[Dict]:
-    """Chunk cleaned/raw docs using LangChain's RecursiveCharacterTextSplitter."""
-
     splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     all_chunks: List[Dict] = []
 
@@ -158,13 +152,12 @@ def split_documents(
 
     return all_chunks
 
-
+#chunk embedding
 def embed_chunks(
     chunks: List[Dict],
     model_name: str = "all-MiniLM-L6-v2",
     batch_size: int = 64,
 ) -> Tuple[np.ndarray, int]:
-    """Compute embeddings for chunk dicts and return (embeddings, dim)."""
 
     texts = [c["text"] for c in chunks]
     model = SentenceTransformer(model_name)
@@ -179,14 +172,13 @@ def embed_chunks(
     logger.info("Computed embeddings: shape=%s", embeddings.shape)
     return embeddings, embeddings.shape[1]
 
-
+#store embedding in faiss index 
 def build_faiss_index(
     embeddings: np.ndarray,
     index_path: str,
     metadata: List[Dict],
     index_factory: str | None = None,
 ) -> None:
-    """Build a FAISS index and persist both the index and metadata."""
 
     faiss.normalize_L2(embeddings)
 
@@ -212,10 +204,8 @@ def build_faiss_index(
         json.dump(metadata, fh, indent=2, ensure_ascii=False)
     logger.info("Saved metadata sidecar to %s", meta_path)
 
-
+# load faiss index 
 def load_faiss_index(index_path: str) -> Tuple[faiss.Index, List[Dict]]:
-    """Load a FAISS index and its metadata sidecar."""
-
     idx_path = Path(index_path)
     if not idx_path.exists():
         raise FileNotFoundError(f"Index file not found: {idx_path}")
@@ -238,8 +228,6 @@ def query_index(
     query_embedding: np.ndarray,
     top_k: int = 6,
 ) -> List[Dict]:
-    """Return metadata rows for the top-k closest vectors."""
-
     q = query_embedding.astype("float32").reshape(1, -1)
     faiss.normalize_L2(q)
 
@@ -263,7 +251,6 @@ def query_index(
 # ---------------------------------------------------------------------------
 
 class LangChainRetrievalQAChain:
-    """LangChain RetrievalQA chain built on the project's FAISS index."""
 
     def __init__(
         self,
@@ -308,17 +295,13 @@ class LangChainRetrievalQAChain:
             return ChatOllama(model=model_name)
 
     def answer(self, question: str) -> Dict[str, Any]:
-        """Run the RetrievalQA chain and return the answer + sources."""
         return self.chain.invoke({"query": question})
 
     def similarity_search_with_score(self, query: str, k: int = 3):
-        """Expose FAISS similarity search with scores for reporting."""
         return self.vectorstore.similarity_search_with_score(query=query, k=k)
 
 
 class QAAgent:
-    """Thin wrapper around `LangChainRetrievalQAChain` for compatibility."""
-
     def __init__(
         self,
         index_path: str = "indexes/faiss_index_all_mini.index",
@@ -339,7 +322,6 @@ class QAAgent:
         logger.info("QAAgent initialized with LangChain RetrievalQA backend")
 
     def answer(self, query: str) -> Dict[str, Any]:
-        """Return the chain result plus a simplified source summary."""
         logger.info("Running RetrievalQA for query: %s", query)
         chain_response = self.chain.answer(query)
         sources: List[Document] = chain_response.get("source_documents", [])  # type: ignore[assignment]
@@ -361,7 +343,6 @@ class QAAgent:
         return summaries
 
     def _top_sources(self, query: str, limit: int = 3) -> List[Dict[str, Any]]:
-        """Return top sources with similarity scores for reporting."""
         try:
             hits = self.chain.similarity_search_with_score(query, k=limit)
         except Exception:
