@@ -67,7 +67,7 @@ class LangChainRetrievalQAChain:
 
     def answer(self, question: str) -> Dict[str, Any]:
         """Run the RetrievalQA chain and return the answer + sources."""
-        return self.chain({"query": question})
+        return self.chain.invoke({"query": question})
 
 
 if __name__ == "__main__":
