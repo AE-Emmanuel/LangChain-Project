@@ -3,7 +3,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+indexes/
+Datasets/
 # C extensions
 *.so
 .python-version

@@ -8,6 +8,7 @@ dependencies = [
     "faiss-cpu>=1.13.0",
     "langchain>=1.1.0",
     "langchain-classic>=1.0.0",
+    "langchain-community>=0.4.1",
     "numpy>=2.3.5",
     "sentence-transformers>=5.1.2",
 ]
