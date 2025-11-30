@@ -309,7 +309,11 @@ class LangChainRetrievalQAChain:
 
     def answer(self, question: str) -> Dict[str, Any]:
         """Run the RetrievalQA chain and return the answer + sources."""
-        return self.chain({"query": question})
+        return self.chain.invoke({"query": question})
+
+    def similarity_search_with_score(self, query: str, k: int = 3):
+        """Expose FAISS similarity search with scores for reporting."""
+        return self.vectorstore.similarity_search_with_score(query=query, k=k)
 
 
 class QAAgent:
@@ -331,6 +335,7 @@ class QAAgent:
             llm_temperature=llm_temperature,
             top_k=top_k,
         )
+        self.top_k = top_k
         logger.info("QAAgent initialized with LangChain RetrievalQA backend")
 
     def answer(self, query: str) -> Dict[str, Any]:
@@ -338,10 +343,12 @@ class QAAgent:
         logger.info("Running RetrievalQA for query: %s", query)
         chain_response = self.chain.answer(query)
         sources: List[Document] = chain_response.get("source_documents", [])  # type: ignore[assignment]
+        top_sources = self._top_sources(query)
         return {
             "answer": chain_response.get("result", ""),
             "source_documents": sources,
             "retrieved": self._summarize_sources(sources),
+            "top_sources": top_sources,
         }
 
     @staticmethod
@@ -352,6 +359,26 @@ class QAAgent:
             meta["text"] = doc.page_content
             summaries.append(meta)
         return summaries
+
+    def _top_sources(self, query: str, limit: int = 3) -> List[Dict[str, Any]]:
+        """Return top sources with similarity scores for reporting."""
+        try:
+            hits = self.chain.similarity_search_with_score(query, k=limit)
+        except Exception:
+            return []
+
+        results: List[Dict[str, Any]] = []
+        for doc, score in hits:
+            meta = dict(doc.metadata)
+            meta["score"] = float(score)
+            results.append(
+                {
+                    "source_path": meta.get("source_path"),
+                    "chunk_id": meta.get("chunk_id"),
+                    "score": float(score),
+                }
+            )
+        return results
 
 
 __all__ = [

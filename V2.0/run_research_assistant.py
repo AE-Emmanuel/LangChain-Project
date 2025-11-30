@@ -55,18 +55,39 @@ def ensure_index(dataset_dir: Path, index_path: Path) -> None:
     logger.info("Finished building FAISS index")
 
 
+def log_interaction(agent: QAAgent, query: str) -> None:
+    response = agent.answer(query)
+
+    print(f"User: {query}\n")
+    answer = response.get("answer", "").strip()
+    print("Assistant:\n ", answer if answer else "<no answer>")
+
+    print("\nTop sources (up to 3):")
+    top_sources = response.get("top_sources", [])
+    if not top_sources:
+        print(" - n/a")
+    else:
+        for src in top_sources:
+            path = src.get("source_path")
+            chunk = src.get("chunk_id")
+            score = src.get("score")
+            print(f" - {path} (chunk {chunk}) score={score:.4f}")
+    print("\n" + "-" * 80 + "\n")
+
+
 def main() -> None:
     ensure_index(DATASET_DIR, INDEX_PATH)
 
     agent = QAAgent(index_path=str(INDEX_PATH), top_k=6)
-    question = "What are the main goals of software testing?"
-    response = agent.answer(question)
 
-    print("Question:\n", question)
-    print("\nAnswer:\n", response["answer"])
-    print("\nSources:")
-    for doc in response.get("source_documents", []):
-        print(f"- {doc.metadata.get('source_path')} (chunk {doc.metadata.get('chunk_id')})")
+    interactions = [
+        "What are the main goals of software testing?",
+        "Given those goals, how does software testing help manage project risks?",
+        "Summarize the main idea of software engineering.",
+    ]
+
+    for query in interactions:
+        log_interaction(agent, query)
 
 
 if __name__ == "__main__":
