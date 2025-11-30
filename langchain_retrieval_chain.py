@@ -8,35 +8,16 @@ from typing import Any, Dict, List
 from langchain_classic.chains.retrieval_qa.base import RetrievalQA
 from langchain_core.documents import Document
 from langchain_core.language_models.llms import BaseLLM
-from langchain_core.outputs import Generation, LLMResult
 from langchain_community.docstore.in_memory import InMemoryDocstore
 from langchain_community.embeddings.sentence_transformer import SentenceTransformerEmbeddings
-from langchain_community.llms import Ollama as LangChainOllama
 from langchain_community.vectorstores.faiss import FAISS
+from langchain_ollama import ChatOllama
 
-from ollama_CLI import OllamaCLI
 from research_assistant import load_faiss_index
 
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
-
-
-class OllamaCLIAdapter(BaseLLM):
-    """Wrap the Ollama CLI helper so it can masquerade as a LangChain LLM."""
-
-    cli: OllamaCLI
-
-    def _generate(
-        self,
-        prompts: list[str],
-        stop: list[str] | None = None,
-        run_manager: Any | None = None,
-        **kwargs: Any,
-    ) -> LLMResult:
-        prompt = prompts[-1] if prompts else ""
-        output = self.cli(prompt)
-        return LLMResult(generations=[[Generation(text=output)]])
 
 
 class LangChainRetrievalQAChain:
@@ -79,13 +60,10 @@ class LangChainRetrievalQAChain:
 
     def _create_llm(self, model_name: str, temperature: float) -> BaseLLM:
         try:
-            return LangChainOllama(model=model_name, temperature=float(temperature))
+            return ChatOllama(model=model_name, temperature=float(temperature))
         except TypeError:
-            logger.debug("Ollama does not accept temperature; retrying without it")
-            return LangChainOllama(model=model_name)
-        except Exception as err:  # pragma: no cover - best effort fallback
-            logger.warning("LangChain Ollama initialization failed (%s); falling back to CLI", err)
-            return OllamaCLIAdapter(cli=OllamaCLI(model=model_name))
+            logger.debug("ChatOllama does not accept temperature; retrying without it")
+            return ChatOllama(model=model_name)
 
     def answer(self, question: str) -> Dict[str, Any]:
         """Run the RetrievalQA chain and return the answer + sources."""
