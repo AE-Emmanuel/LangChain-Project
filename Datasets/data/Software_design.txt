@@ -144,23 +144,4 @@ Systems Modeling Language (SysML)
 A general-purpose modeling language for systems engineering.
 Service-oriented modeling framework (SOMF)
 
-See also
-Aspect-oriented software development – Programming paradigmPages displaying short descriptions of redirect targets
-Design rationale – Explicit listing of design decisions
-Graphic design – Interdisciplinary branch of design and fine arts
-Interaction design – Specialization of design focused on the experience users have of a product or service
-Icon design – Genre of graphic design
-Outline of software – Topical guide to software
-Outline of software development – Overview of and topical guide to software development
-Outline of software engineering – Overview of and topical guide to software engineering
-Search-based software engineering – Application of metaheuristic search techniques to software engineering
-Software Design Description – Written design description of a software productPages displaying short descriptions of redirect targets
-Software development – Creation and maintenance of software
-User experience – Human interaction with a particular product, system or service
-User interface design – Planned operator–machine interaction
-Web design – Creation and maintenance of websites
-Zero One Infinity – Software design rulePages displaying short descriptions of redirect targets
 
-References
-
-^Roger S. Pressman (2001). Software engineering: a practitioner's approach. McGraw-Hill. ISBN 0-07-365578-3.

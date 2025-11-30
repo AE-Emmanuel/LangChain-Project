@@ -27,7 +27,7 @@ Notable definitions of software engineering include:
 "The systematic application of scientific and technological knowledge, methods, and experience to the design, implementation, testing, and documentation of software."—The Bureau of Labor Statistics—IEEE Systems and software engineering – Vocabulary
 "The application of a systematic, disciplined, quantifiable approach to the development, operation, and maintenance of software."—IEEE Standard Glossary of Software Engineering Terminology
 "An engineering discipline concerned with all aspects of software production." — Ian Sommerville
-}}</ref>
+
 
 "The establishment and use of sound engineering principles in order to economically obtain software that is reliable and works efficiently on real machines."—Fritz Bauer
 "A branch of computer science that deals with the design, implementation, and maintenance of complex computer programs."—Merriam-Webster
@@ -121,41 +121,3 @@ Edsger Dijkstra, a founder of many of the concepts in software development today
 
 A number of these phenomena have been bundled under the name "Software Engineering". As economics is known as "The Miserable Science", software engineering should be known as "The Doomed Discipline", doomed because it cannot even approach its goal since its goal is self-contradictory. Software engineering, of course, presents itself as another worthy cause, but that is eyewash: if you carefully read its literature and analyse what its devotees actually do, you will discover that software engineering has accepted as its charter "How to program if you cannot."
 
-See also
-Study and practice
-Computer science
-Data engineering
-Software craftsmanship
-Software development
-Release engineering
-
-Roles
-Programmer
-Systems analyst
-Systems architect
-
-Professional aspects
-Bachelor of Science in Information Technology
-Bachelor of Software Engineering
-List of software engineering conferences
-List of computer science journals (including software engineering journals)
-List of software programming journals
-Lists of programming software development tools
-Software Engineering Institute
-
-References
-Citations
-Sources
-Further reading
-Pierre Bourque; Richard E. (Dick) Fairley, eds. (2014). Guide to the Software Engineering Body of Knowledge Version 3.0 (SWEBOK). IEEE Computer Society.
-Roger S. Pressman; Bruce Maxim (January 23, 2014). Software Engineering: A Practitioner's Approach (8th ed.). McGraw-Hill. ISBN 978-0-07-802212-8.
-Ian Sommerville (March 24, 2015). Software Engineering (10th ed.). Pearson Education Limited. ISBN 978-0-13-394303-0.
-Jalote, Pankaj (2005) [1991]. An Integrated Approach to Software Engineering (3rd ed.). Springer. ISBN 978-0-387-20881-7.
-Bruegge, Bernd; Dutoit, Allen (2009). Object-oriented software engineering : using UML, patterns, and Java (3rd ed.). Prentice Hall. ISBN 978-0-13-606125-0.
-Oshana, Robert (2019-06-21). Software engineering for embedded systems : methods, practical techniques, and applications (Second ed.). Kidlington, Oxford, United Kingdom. ISBN 978-0-12-809433-4.
-
-External links
-
-Pierre Bourque; Richard E. Fairley, eds. (2004). Guide to the Software Engineering Body of Knowledge Version 3.0 (SWEBOK), https://www.computer.org/web/swebok/v3. IEEE Computer Society.
-The Open Systems Engineering and Software Development Life Cycle Framework Archived 2010-07-18 at the Wayback Machine OpenSDLC.org the integrated Creative Commons SDLC
-Software Engineering Institute Carnegie Mellon
