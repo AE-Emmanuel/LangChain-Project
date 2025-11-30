@@ -1,0 +1,104 @@
+# .gitignore for a Python LangChain project
+# Ignore Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+pip-wheel-metadata/
+wheelhouse/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+.env
+
+# pyenv
+.python-version
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Jupyter
+.ipynb_checkpoints
+
+# Poetry
+poetry.lock
+
+# MyPy
+.mypy_cache/
+
+# IDEs and editors
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# dotenv files
+.env.local
+.env.*.local
+.env
+
+# AWS credentials
+.aws/
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite3
+
+# Sensitive / private keys
+credentials
+*.pem
+*.key
+
+# Editor temporary files
+*~
+*.swp
+*.swo
+
+# Optional: ignore local dataset or output folders
+# Uncomment any of these if you want to avoid checking in large files
+# /Datasets/
+# /data/
+# /outputs/
+# /models/
+
