@@ -15,76 +15,10 @@
 
 ---
 
-## 💡 What is this?
+## 💡 What is this System about in short?
 
-A **Retrieval-Augmented Generation (RAG)** pipeline that combines semantic search with local LLM generation. Upload your documents, ask questions in natural language, and get accurate answers backed by source citations—all running locally on your machine.
+A **Retrieval-Augmented Generation (RAG)** pipeline that combines semantic search with local LLM generation. ask questions in natural language, and get accurate answers backed by source citations—all running locally on your machine.
 
-```
-"What is Agile development?"
-    ↓
-🔍 Semantic search finds relevant chunks
-    ↓
-🧠 Llama3 generates contextual answer
-    ↓
-📄 Returns answer + source references
-```
-
----
-
-## ✨ Key Features
-
-| | |
-|---|---|
-| 🔒 **Privacy First** | Everything runs locally—no data leaves your machine |
-| ⚡ **Fast Retrieval** | FAISS vector similarity search in milliseconds |
-| 📚 **Source Citations** | Every answer includes document references |
-| 🔧 **Extensible** | Add your own documents and rebuild the index |
-
----
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-```bash
-# Install Ollama (macOS)
-brew install ollama
-
-# Or on Linux
-curl -fsSL https://ollama.com/install.sh | sh
-
-# Pull the Llama3 model
-ollama pull llama3
-```
-
-### Setup
-
-```bash
-# Clone & enter project
-git clone https://github.com/AE-Emmanuel/LangChain-Project.git
-cd LangChain-Project
-
-# Create environment & install dependencies
-python -m venv .venv && source .venv/bin/activate
-pip install -e .
-
-# Create a Datasets directory and add your .txt documents
-mkdir -p Datasets
-# Add your .txt files to the Datasets directory
-
-# Build the search index
-python build_index.py
-```
-
-### Run
-
-```bash
-# Run the QA Agent directly
-python QA_agent.py
-
-# Or run the LangChain retrieval chain
-python langchain_retrieval_chain.py
-```
 
 ---
 
@@ -95,8 +29,8 @@ python langchain_retrieval_chain.py
 │                        INDEXING PIPELINE                           │
 ├────────────────────────────────────────────────────────────────────┤
 │                                                                    │
-│   📄 Documents  →  ✂️ Chunking  →  🔢 Embeddings  →  💾 FAISS     │
-│      (.txt)        (1100 chars)   (MiniLM-L6-v2)      Index       │
+│   📄 Documents  →  ✂️ Chunking  →  🔢 Embeddings  →  💾 FAISS      │ 
+│      (.txt)        (1100 chars)   (MiniLM-L6-v2)      Index        │
 │                                                                    │
 └────────────────────────────────────────────────────────────────────┘
                                 ↓
@@ -105,7 +39,7 @@ python langchain_retrieval_chain.py
 ├────────────────────────────────────────────────────────────────────┤
 │                                                                    │
 │   ❓ Question  →  🔍 Retrieve  →  🧠 Generate  →  ✅ Answer        │
-│                    Top-K          (Llama3)        + Sources       │
+│                    Top-K          (Llama3)        + Sources        │
 │                    Chunks                                          │
 │                                                                    │
 └────────────────────────────────────────────────────────────────────┘
@@ -117,12 +51,12 @@ python langchain_retrieval_chain.py
 
 ```
 .
-├── QA_agent.py                   # 🎯 QA Agent wrapper class
-├── langchain_retrieval_chain.py  # 🔗 LangChain RetrievalQA chain
-├── research_assistant.py         # 📚 Document loading, chunking & indexing
-├── build_index.py                # 🔨 Index builder script
-├── pyproject.toml                # 📦 Project dependencies
-└── indexes/                      # 💾 FAISS index files (generated)
+├── QA_agent.py                   #  QA Agent wrapper class
+├── langchain_retrieval_chain.py  #  LangChain RetrievalQA chain
+├── research_assistant.py         #  Document loading, chunking & indexing
+├── build_index.py                #  Index builder script
+├── pyproject.toml                #  Project dependencies
+└── indexes/                      #  FAISS index files (generated)
 ```
 
 ---
@@ -137,60 +71,6 @@ python langchain_retrieval_chain.py
 | `llm_model` | `llama3` | Generation model |
 | `top_k` | `6` | Retrieved chunks per query |
 
----
-
-## 📖 Usage Examples
-
-### Basic Usage
-
-```python
-from QA_agent import QAAgent
-
-# Initialize the agent
-agent = QAAgent(index_path="indexes/faiss_index_all_mini.index")
-
-# Ask a question
-response = agent.answer("What is software testing?")
-
-print(response["answer"])
-# Software testing is the process of evaluating and verifying 
-# that a software product or application does what it is supposed to do...
-
-print(response["retrieved"])
-# List of source documents with metadata (doc_id, source_path, text, etc.)
-```
-
-### Using the LangChain Chain Directly
-
-```python
-from langchain_retrieval_chain import LangChainRetrievalQAChain
-
-chain = LangChainRetrievalQAChain(
-    index_path="indexes/faiss_index_all_mini.index",
-    top_k=6
-)
-
-response = chain.answer("What are the main activities in software engineering?")
-print(response["result"])
-
-# Print sources
-for doc in response.get("source_documents", []):
-    print(f"- {doc.metadata.get('source_path')}")
-```
-
-### Add Your Own Documents
-
-```bash
-# 1. Create a Datasets directory (if it doesn't exist) and add your .txt files
-mkdir -p Datasets
-cp my_document.txt Datasets/
-
-# 2. Rebuild the index
-python build_index.py
-
-# 3. Query your new content
-python QA_agent.py
-```
 
 ---
 
@@ -205,14 +85,8 @@ python QA_agent.py
 
 ---
 
-## 📄 License
-
-MIT © [AE-Emmanuel](https://github.com/AE-Emmanuel)
-
----
-
 <div align="center">
 
-*Built for Deep Learning coursework* 🎓
+*Built for Deep Learning coursework* 
 
 </div>
