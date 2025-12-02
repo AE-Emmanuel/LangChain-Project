@@ -19,7 +19,7 @@
 
 A **Retrieval-Augmented Generation (RAG)** pipeline that combines semantic search with local LLM generation. Upload your documents, ask questions in natural language, and get accurate answers backed by source citations—all running locally on your machine.
 
-\`\`\`
+```
 "What is Agile development?"
     ↓
 🔍 Semantic search finds relevant chunks
@@ -27,7 +27,7 @@ A **Retrieval-Augmented Generation (RAG)** pipeline that combines semantic searc
 🧠 Llama3 generates contextual answer
     ↓
 📄 Returns answer + source references
-\`\`\`
+```
 
 ---
 
@@ -46,40 +46,51 @@ A **Retrieval-Augmented Generation (RAG)** pipeline that combines semantic searc
 
 ### Prerequisites
 
-\`\`\`bash
+```bash
 # Install Ollama (macOS)
 brew install ollama
 
+# Or on Linux
+curl -fsSL https://ollama.com/install.sh | sh
+
 # Pull the Llama3 model
 ollama pull llama3
-\`\`\`
+```
 
 ### Setup
 
-\`\`\`bash
+```bash
 # Clone & enter project
 git clone https://github.com/AE-Emmanuel/LangChain-Project.git
 cd LangChain-Project
 
-# Create environment & install
+# Create environment & install dependencies
 python -m venv .venv && source .venv/bin/activate
 pip install -e .
 
+# Create a Datasets directory and add your .txt documents
+mkdir -p Datasets
+# Add your .txt files to the Datasets directory
+
 # Build the search index
 python build_index.py
-\`\`\`
+```
 
 ### Run
 
-\`\`\`bash
-python V2.0/run_research_assistant.py
-\`\`\`
+```bash
+# Run the QA Agent directly
+python QA_agent.py
+
+# Or run the LangChain retrieval chain
+python langchain_retrieval_chain.py
+```
 
 ---
 
 ## 🏗️ How It Works
 
-\`\`\`
+```
 ┌────────────────────────────────────────────────────────────────────┐
 │                        INDEXING PIPELINE                           │
 ├────────────────────────────────────────────────────────────────────┤
@@ -98,24 +109,21 @@ python V2.0/run_research_assistant.py
 │                    Chunks                                          │
 │                                                                    │
 └────────────────────────────────────────────────────────────────────┘
-\`\`\`
+```
 
 ---
 
 ## 📁 Project Structure
 
-\`\`\`
+```
 .
-├── V2.0/
-│   ├── research_assistant.py     # 🎯 Core RAG pipeline
-│   └── run_research_assistant.py # Demo script
-├── Datasets/
-│   ├── data/                     # Source documents
-│   └── export_wiki.py            # Wikipedia fetcher
-├── indexes/                      # FAISS index files
-├── build_index.py                # Index builder
-└── pyproject.toml                # Dependencies
-\`\`\`
+├── QA_agent.py                   # 🎯 QA Agent wrapper class
+├── langchain_retrieval_chain.py  # 🔗 LangChain RetrievalQA chain
+├── research_assistant.py         # 📚 Document loading, chunking & indexing
+├── build_index.py                # 🔨 Index builder script
+├── pyproject.toml                # 📦 Project dependencies
+└── indexes/                      # 💾 FAISS index files (generated)
+```
 
 ---
 
@@ -123,11 +131,11 @@ python V2.0/run_research_assistant.py
 
 | Parameter | Default | Description |
 |:----------|:-------:|:------------|
-| \`chunk_size\` | \`1100\` | Characters per chunk |
-| \`chunk_overlap\` | \`220\` | Overlap between chunks |
-| \`embed_model\` | \`all-MiniLM-L6-v2\` | Embedding model |
-| \`llm_model\` | \`llama3\` | Generation model |
-| \`top_k\` | \`6\` | Retrieved chunks per query |
+| `chunk_size` | `1100` | Characters per chunk |
+| `chunk_overlap` | `220` | Overlap between chunks |
+| `embed_model` | `all-MiniLM-L6-v2` | Embedding model |
+| `llm_model` | `llama3` | Generation model |
+| `top_k` | `6` | Retrieved chunks per query |
 
 ---
 
@@ -135,32 +143,54 @@ python V2.0/run_research_assistant.py
 
 ### Basic Usage
 
-\`\`\`python
-from V2.0.research_assistant import QAAgent
+```python
+from QA_agent import QAAgent
 
+# Initialize the agent
 agent = QAAgent(index_path="indexes/faiss_index_all_mini.index")
+
+# Ask a question
 response = agent.answer("What is software testing?")
 
 print(response["answer"])
 # Software testing is the process of evaluating and verifying 
 # that a software product or application does what it is supposed to do...
 
-print(response["top_sources"])
-# [{'source_path': 'Datasets/data/Software_testing.txt', 'score': 0.8234}]
-\`\`\`
+print(response["retrieved"])
+# List of source documents with metadata (doc_id, source_path, text, etc.)
+```
+
+### Using the LangChain Chain Directly
+
+```python
+from langchain_retrieval_chain import LangChainRetrievalQAChain
+
+chain = LangChainRetrievalQAChain(
+    index_path="indexes/faiss_index_all_mini.index",
+    top_k=6
+)
+
+response = chain.answer("What are the main activities in software engineering?")
+print(response["result"])
+
+# Print sources
+for doc in response.get("source_documents", []):
+    print(f"- {doc.metadata.get('source_path')}")
+```
 
 ### Add Your Own Documents
 
-\`\`\`bash
-# 1. Add .txt files to Datasets/data/
-cp my_document.txt Datasets/data/
+```bash
+# 1. Create a Datasets directory (if it doesn't exist) and add your .txt files
+mkdir -p Datasets
+cp my_document.txt Datasets/
 
 # 2. Rebuild the index
 python build_index.py
 
 # 3. Query your new content
-python V2.0/run_research_assistant.py
-\`\`\`
+python QA_agent.py
+```
 
 ---
 
